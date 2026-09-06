@@ -1130,6 +1130,7 @@ section:not(.hero) {
 }
 
 .site-footer p { margin: 0; color: #727d8c; font-family: var(--mono); font-size: 8px; }
+.site-footer p a { color: var(--ink); font-weight: 500; text-underline-offset: 3px; }
 
 .example-dialog {
   width: min(980px, calc(100% - 32px));
