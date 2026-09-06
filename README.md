@@ -2,6 +2,9 @@
 
 这是 Full / Full2 / Full3 / Full4 四批 PR 合成数据的说明与可视化网页。页面把代表性样例放在第一屏之后，重点回答三件事：
 
+- 在线网页：<https://lyumanshanye.github.io/pr-data-atlas/>
+- GitHub 仓库：<https://github.com/lyumanshanye/pr-data-atlas>
+
 1. 一条 PR 数据真正包含哪些工程上下文；
 2. 哪些真实样例最能体现这些上下文的价值；
 3. 当前数据覆盖多少 PR、仓库和估算 token。
