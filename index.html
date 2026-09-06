@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="PR Data Atlas：四批 PR 合成数据的代表性样例、字段结构、覆盖规模与去重口径。"
+    />
+    <meta name="theme-color" content="#111c2d" />
+    <title>PR Data Atlas · PR 数据图谱</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#examples">跳到代表性样例</a>
+
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="PR Data Atlas 首页">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span>PR DATA ATLAS</span>
+      </a>
+      <nav aria-label="页面导航">
+        <a href="#examples">代表样例</a>
+        <a href="#anatomy">字段结构</a>
+        <a href="#coverage">覆盖规模</a>
+        <a href="#method">方法</a>
+      </nav>
+      <span class="header-meta">DATA SNAPSHOT · 2026.09</span>
+    </header>
+
+    <main id="top">
+      <section class="hero section-shell">
+        <div class="hero-copy">
+          <p class="eyebrow"><span></span> Pull Request Synthesis Corpus</p>
+          <h1>不只是一段 diff，<br /><em>而是一次完整的软件变更。</em></h1>
+          <p class="hero-lede">
+            这套数据把 issue、PR 描述、仓库上下文、相关文件、commit 历史、patch，
+            以及模型生成的 PR 总结与 refined commit message 串成可训练的工程叙事。
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#examples">先看 16 个好例子</a>
+            <a class="button button-ghost" href="#anatomy">查看一个 PR 存什么</a>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-label="数据从 issue 到训练文本的构成示意">
+          <div class="orbit orbit-one"></div>
+          <div class="orbit orbit-two"></div>
+          <div class="data-node node-issue">
+            <span>01</span>
+            <strong>Issue</strong>
+            <small>problem context</small>
+          </div>
+          <div class="data-node node-pr">
+            <span>02</span>
+            <strong>Pull request</strong>
+            <small>intent · metadata</small>
+          </div>
+          <div class="data-node node-code">
+            <span>03</span>
+            <strong>Code context</strong>
+            <small>files · commits · diffs</small>
+          </div>
+          <div class="data-node node-output">
+            <span>04</span>
+            <strong>Task 6 text</strong>
+            <small>structured training sample</small>
+          </div>
+          <div class="visual-core">
+            <span>≈</span>
+            <strong>1.14T</strong>
+            <small>raw estimated tokens</small>
+          </div>
+        </div>
+
+        <div class="hero-stats" aria-label="数据集核心指标">
+          <article>
+            <span class="stat-index">01</span>
+            <strong data-count="59156582">59.16M</strong>
+            <p>四批合并前去重后的唯一 PR</p>
+          </article>
+          <article>
+            <span class="stat-index">02</span>
+            <strong id="repo-union-hero">1.42M</strong>
+            <p>覆盖的唯一 GitHub 仓库</p>
+          </article>
+          <article>
+            <span class="stat-index">03</span>
+            <strong>16</strong>
+            <p>人工复核的多样性代表样例</p>
+          </article>
+          <article>
+            <span class="stat-index">04</span>
+            <strong>4</strong>
+            <p>Full / Full2 / Full3 / Full4 批次</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="examples section-shell" id="examples">
+        <div class="section-heading split-heading">
+          <div>
+            <p class="eyebrow"><span></span> Start with the examples</p>
+            <h2>先看真正有信息量的 PR</h2>
+          </div>
+          <div class="heading-note">
+            <span class="note-number">16</span>
+            <p>
+              从 1,536 条候选中筛选。覆盖不同批次、语言、工程任务与上下文长度；
+              排除了纯版本升级、bot bump 和低信息量 release PR。
+            </p>
+          </div>
+        </div>
+
+        <div class="spotlight" id="spotlight" aria-live="polite"></div>
+
+        <div class="examples-toolbar">
+          <div class="filter-group" id="category-filters" aria-label="按类型筛选"></div>
+          <label class="search-box">
+            <span class="sr-only">搜索样例</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m21 21-4.35-4.35m2.1-5.4a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z" /></svg>
+            <input id="example-search" type="search" placeholder="搜索 repo、语言或任务…" />
+          </label>
+        </div>
+
+        <div class="result-line">
+          <p><strong id="visible-count">16</strong> 个代表样例</p>
+          <p>点击卡片查看字段、文件与改动摘要</p>
+        </div>
+        <div class="example-grid" id="example-grid"></div>
+        <p class="empty-state" id="empty-state" hidden>没有匹配的样例，换个筛选条件试试。</p>
+      </section>
+
+      <section class="anatomy section-shell" id="anatomy">
+        <div class="section-heading">
+          <p class="eyebrow"><span></span> Anatomy of one PR</p>
+          <h2>一个 PR 数据里，到底存了什么？</h2>
+          <p class="section-intro">
+            数据不是把 GitHub 页面简单拼接起来。它保留四个层次：原始事实、关联上下文、
+            模型增强结果和最终训练文本。下面的字段均来自当前 Parquet schema。
+          </p>
+        </div>
+
+        <div class="pipeline" role="list" aria-label="PR 数据处理的四个阶段">
+          <article class="pipeline-card" role="listitem">
+            <header><span>01</span><small>RAW PR</small></header>
+            <h3>原始变更事实</h3>
+            <p>回答“谁在什么仓库提交了多大的变更”。</p>
+            <ul>
+              <li><code>repo_id · repo_name</code></li>
+              <li><code>pr_number · title · body</code></li>
+              <li><code>author · author_type · merged_at</code></li>
+              <li><code>files / additions / deletions</code></li>
+              <li><code>extensions_list · py_files_count</code></li>
+            </ul>
+          </article>
+          <article class="pipeline-card" role="listitem">
+            <header><span>02</span><small>ENRICHED</small></header>
+            <h3>补齐工程上下文</h3>
+            <p>回答“为什么改、周围代码是什么、改动如何演进”。</p>
+            <ul>
+              <li><code>repo_description</code></li>
+              <li><code>related_issue</code> + comments</li>
+              <li><code>changed_py_files</code></li>
+              <li><code>relevant_files[]</code> + content</li>
+              <li><code>commits[]</code> + diffs[] + patch</li>
+            </ul>
+          </article>
+          <article class="pipeline-card accent-card" role="listitem">
+            <header><span>03</span><small>LLM ENHANCED</small></header>
+            <h3>把变更讲清楚</h3>
+            <p>在事实层上增加两类模型生成的结构化语义。</p>
+            <ul>
+              <li><code>pr_summary</code></li>
+              <li><code>commits[].refined_message</code></li>
+              <li>保留原始 issue、文件和 patch</li>
+              <li>不覆盖原 commit message</li>
+            </ul>
+          </article>
+          <article class="pipeline-card output-card" role="listitem">
+            <header><span>04</span><small>TASK 6</small></header>
+            <h3>渲染为训练样本</h3>
+            <p>按稳定模板组织成长文本，保留可追溯的结构边界。</p>
+            <ul>
+              <li>Repository context</li>
+              <li>Issue discussion</li>
+              <li>PR intent + summary</li>
+              <li>Relevant source files</li>
+              <li>Commit history + patches</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="schema-panel">
+          <div class="schema-copy">
+            <p class="mini-label">NESTED SCHEMA</p>
+            <h3>关联对象不会被压扁</h3>
+            <p>
+              Issue 评论、commit 和 diff 都以嵌套结构保存，因此同一个 PR 内仍能恢复讨论时序、
+              commit 边界和文件级 patch。最终文本只是其中一种渲染，不是唯一交付形态。
+            </p>
+            <div class="schema-legend">
+              <span><i class="legend-scalar"></i> scalar</span>
+              <span><i class="legend-struct"></i> struct</span>
+              <span><i class="legend-list"></i> list</span>
+              <span><i class="legend-generated"></i> generated</span>
+            </div>
+          </div>
+          <div class="schema-tree" aria-label="嵌套字段树">
+            <div class="tree-root"><b>PRRecord</b><span>struct</span></div>
+            <div class="tree-row depth-1"><b>repo_id</b><span>int64</span></div>
+            <div class="tree-row depth-1"><b>repo_name</b><span>string</span></div>
+            <div class="tree-row depth-1 struct"><b>related_issue</b><span>struct</span></div>
+            <div class="tree-row depth-2"><b>title · body · author</b><span>string</span></div>
+            <div class="tree-row depth-2 list"><b>comments[]</b><span>list&lt;struct&gt;</span></div>
+            <div class="tree-row depth-1 list"><b>relevant_files[]</b><span>list&lt;struct&gt;</span></div>
+            <div class="tree-row depth-2"><b>path · content</b><span>string</span></div>
+            <div class="tree-row depth-1 list"><b>commits[]</b><span>list&lt;struct&gt;</span></div>
+            <div class="tree-row depth-2 generated"><b>refined_message</b><span>string · LLM</span></div>
+            <div class="tree-row depth-2 list"><b>diffs[] → path · patch</b><span>list&lt;struct&gt;</span></div>
+            <div class="tree-row depth-1 generated"><b>pr_summary</b><span>string · LLM</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="coverage section-shell" id="coverage">
+        <div class="section-heading split-heading">
+          <div>
+            <p class="eyebrow"><span></span> Coverage & scale</p>
+            <h2>四批数据的覆盖规模</h2>
+          </div>
+          <p class="heading-side-copy">
+            PR 数使用 <code>(repo_id, pr_id)</code> 作为联合键。Token 统一按 Task 6
+            渲染文本总字符 ÷ 4 估算，适合做容量规划，不等同于 tokenizer 精确计数。
+          </p>
+        </div>
+
+        <div class="coverage-layout">
+          <article class="chart-card batch-chart-card">
+            <div class="chart-title">
+              <div><small>UNIQUE PR BY BATCH</small><h3>批次体量</h3></div>
+              <span class="chart-unit">million PRs</span>
+            </div>
+            <div id="batch-bars" class="batch-bars"></div>
+          </article>
+
+          <article class="chart-card donut-card">
+            <div class="chart-title">
+              <div><small>RAW TASK 6 ESTIMATE</small><h3>Token 构成</h3></div>
+              <span class="chart-unit">4 chars / token</span>
+            </div>
+            <div class="donut-wrap">
+              <div class="donut" id="token-donut"><span><b>1.138T</b>raw total</span></div>
+              <div class="donut-legend" id="token-legend"></div>
+            </div>
+          </article>
+        </div>
+
+        <div class="dedup-panel">
+          <div class="dedup-copy">
+            <p class="mini-label">DEDUPLICATION VIEW</p>
+            <h3>“物化行数”不等于“最终增量”</h3>
+            <p>
+              先在每批内部按联合键去重，再处理四批之间的重合，最后移除与曾济既有数据
+              <code>(repo_id, pr_id)</code> 重合的 PR。三层口径必须分开看。
+            </p>
+          </div>
+          <div class="waterfall" aria-label="去重前后 PR 数量变化">
+            <div class="waterfall-stage stage-raw">
+              <span>四批唯一键并集前</span><strong>59.47M</strong><small>批内去重后求和</small>
+            </div>
+            <i aria-hidden="true">−</i>
+            <div class="waterfall-stage stage-overlap">
+              <span>批间重合</span><strong>0.31M</strong><small>同一联合键</small>
+            </div>
+            <i aria-hidden="true">−</i>
+            <div class="waterfall-stage stage-zengji">
+              <span>曾济重合</span><strong>1.36M</strong><small>实际键交集</small>
+            </div>
+            <i aria-hidden="true">=</i>
+            <div class="waterfall-stage stage-final">
+              <span>最终增量</span><strong>57.80M</strong><small>约 1.102T tokens</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="metric-strip">
+          <article><small>物化记录</small><strong>59.90M</strong><p>四个目录实际 Parquet 行数</p></article>
+          <article><small>批内唯一键</small><strong>59.47M</strong><p>各批分别去重后求和</p></article>
+          <article><small>四批联合并集</small><strong>59.16M</strong><p>处理批间重复之后</p></article>
+          <article><small>最终可作增量</small><strong>57.80M</strong><p>再移除曾济重合之后</p></article>
+        </div>
+      </section>
+
+      <section class="method section-shell" id="method">
+        <div class="section-heading">
+          <p class="eyebrow"><span></span> Selection & provenance</p>
+          <h2>样例怎么选，数字怎么看</h2>
+        </div>
+        <div class="method-grid">
+          <article>
+            <span class="method-number">01</span>
+            <h3>先做平衡候选池</h3>
+            <p>四个批次各取 384 条，共 1,536 条候选，避免大批次自然淹没小批次。</p>
+          </article>
+          <article>
+            <span class="method-number">02</span>
+            <h3>按信息密度初筛</h3>
+            <p>优先有 issue、讨论、测试、多个相关文件、refined commit 与非空 patch 的 PR。</p>
+          </article>
+          <article>
+            <span class="method-number">03</span>
+            <h3>主动拉开多样性</h3>
+            <p>人工复核任务类型、语言、批次与长度；保留小而精的 bug，也保留复杂长上下文。</p>
+          </article>
+          <article>
+            <span class="method-number">04</span>
+            <h3>不把精选当总体评估</h3>
+            <p>这 16 条用于解释数据能力，不代表全量质量分布；规模数字来自全量联合键统计。</p>
+          </article>
+        </div>
+
+        <div class="paths-panel">
+          <div>
+            <p class="mini-label">DELIVERY ROOTS</p>
+            <h3>当前交付路径</h3>
+          </div>
+          <div class="path-list">
+            <code><span>Full</span>/inspire/hdd2/project/special-project-1/public/pt-data-yelvshenyu/yelv_synthesis_pr_smoke/full</code>
+            <code><span>Full2</span>/inspire/hdd2/project/special-project-1/public/pt-data-yelvshenyu/yelv_synthesis_pr_smoke/full2</code>
+            <code><span>Full3</span>/inspire/hdd2/project/special-project-1/public/pt-data-yelvshenyu/yelv_synthesis_pr_smoke/full3</code>
+            <code><span>Full4</span>/inspire/hdd2/project/special-project-1/public/pt-data-yelvshenyu/yelv_synthesis_pr_smoke/full4_815</code>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer section-shell">
+      <div><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><strong>PR DATA ATLAS</strong></div>
+      <p>Public GitHub PR data · Curated examples use truncated summaries · Snapshot 2026-09-06</p>
+    </footer>
+
+    <dialog class="example-dialog" id="example-dialog" aria-labelledby="dialog-title">
+      <button class="dialog-close" type="button" aria-label="关闭详情">×</button>
+      <div id="dialog-content"></div>
+    </dialog>
+
+    <script src="app.js"></script>
+  </body>
+</html>
